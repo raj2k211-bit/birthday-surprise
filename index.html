@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surprise for Rafat</title>
+
+<style>
+:root{
+--pink:#ff6f91;
+--bg:linear-gradient(135deg,#ffe6f0,#fff0f5,#fff5e6);
+}
+
+body{
+margin:0;
+font-family:'Poppins',sans-serif;
+background:var(--bg);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+overflow:hidden;
+text-align:center;
+}
+
+/* Floating hearts & flowers */
+.float{
+position:fixed;
+bottom:-30px;
+font-size:22px;
+pointer-events:none;
+animation:floatUp 8s linear infinite;
+opacity:0.8;
+z-index:5;
+}
+@keyframes floatUp{
+0%{transform:translateY(0) scale(0.5);opacity:0;}
+50%{opacity:1;}
+100%{transform:translateY(-120vh) scale(1.2);opacity:0;}
+}
+
+/* Page card */
+.page{
+display:none;
+background:rgba(255,255,255,0.75);
+backdrop-filter:blur(20px);
+padding:30px;
+border-radius:30px;
+box-shadow:0 20px 60px rgba(0,0,0,0.25);
+width:90%;
+max-width:420px;
+position:relative;
+z-index:10;
+animation:fadeIn 0.6s ease;
+}
+.active{display:block;}
+
+@keyframes fadeIn{
+from{opacity:0;transform:scale(0.85);}
+to{opacity:1;transform:scale(1);}
+}
+
+.page img{
+width:100%;
+border-radius:20px;
+margin-bottom:15px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* Buttons */
+button{
+background:var(--pink);
+color:white;
+border:none;
+padding:12px 25px;
+border-radius:50px;
+cursor:pointer;
+font-size:16px;
+margin:10px;
+transition:0.3s;
+font-weight:bold;
+touch-action: manipulation;
+}
+button:hover{
+transform:scale(1.12);
+box-shadow:0 0 25px var(--pink);
+}
+
+#no-btn{
+background:#888;
+position:relative;
+}
+
+/* Candle */
+.candle{
+width:20px;
+height:50px;
+background:#ffd700;
+margin:20px auto;
+position:relative;
+border-radius:3px;
+}
+.flame{
+width:14px;
+height:22px;
+background:orange;
+border-radius:50% 50% 20% 20%;
+position:absolute;
+top:-22px;
+left:3px;
+animation:flicker 0.1s infinite alternate;
+box-shadow:0 0 15px orange;
+cursor:pointer;
+}
+@keyframes flicker{
+from{transform:scale(1);}
+to{transform:scale(1.2);}
+}
+.extinguished{display:none;}
+
+/* Extreme flower rush */
+.petal{
+position:absolute;
+font-size:24px;
+pointer-events:none;
+z-index:9999;
+animation:rush 5s cubic-bezier(.12,.8,.3,1) forwards;
+}
+@keyframes rush{
+0%{transform:translate(0,0) rotate(0deg) scale(0);opacity:1;}
+40%{transform:translate(var(--x),var(--y)) rotate(360deg) scale(1.6);opacity:1;}
+100%{transform:translate(var(--x-end),110vh) rotate(1080deg) scale(0.8);opacity:0;}
+}
+
+/* ===== PREMIUM COUNTDOWN OVERLAY ===== */
+
+#countdownOverlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+display:none;
+justify-content:center;
+align-items:center;
+background:rgba(255,255,255,0.1);
+backdrop-filter:blur(8px);
+z-index:15;
+}
+
+.countdown-box{
+position:relative;
+z-index:5;
+background:rgba(255,255,255,0.2); /* glass effect */
+backdrop-filter:blur(20px);
+padding:60px 80px;
+border-radius:25px;
+box-shadow:0 0 40px rgba(255,255,255,0.4);
+border:1px solid rgba(255,255,255,0.4);
+text-align:center;
+animation:boxGlow 2s infinite alternate;
+}
+
+#countNum{
+font-size:120px;
+font-weight:bold;
+color:white;
+opacity:0;
+transform:scale(0.5);
+}
+
+.count-animate{
+animation:countFade 0.8s ease forwards;
+}
+
+@keyframes countFade{
+from{opacity:0;transform:scale(0.5);}
+to{opacity:1;transform:scale(1);}
+}
+
+@keyframes boxGlow{
+from{box-shadow:0 0 20px rgba(255,255,255,0.3);}
+to{box-shadow:0 0 50px rgba(255,255,255,0.7);}
+}
+
+/* ===== PREMIUM Glass Look ===== */
+
+.gift-container{
+  padding: 40px 30px;        /* spacing inside */
+  text-align: center;
+  position: relative;
+  z-index: 10;               /* above floating sparkles */
+}
+
+.gift-container button{
+  margin-top: 25px;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 25px;
+  background: #ff4d88;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.gift-container button:hover{
+  background: #ff1a75;
+  transform: scale(1.05);
+}
+
+#bigGift:hover{
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* ===== Premium-float for countdown and slideshow overlay (For p8) ===== */
+
+.premium-float{
+position:absolute;
+bottom:-30px;
+font-size:22px;
+pointer-events:none;
+animation:floatUp 8s linear infinite;
+opacity:0.8;
+z-index:1;   /* between overlay and white box */
+}
+
+</style>
+</head>
+
+<body style="display:none;" onload="checkPass()">
+
+<audio id="bg-music" loop>
+<source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- PAGE 1 -->
+<div id="p1" class="page active">
+<h2>Do you want to open this?<br>I put a little effort for you... 🎀</h2>
+<div id="btn-container" style="
+    position:relative;
+    height:120px;
+    margin-top:20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:20px;
+    overflow:hidden;">
+    <button onclick="nextPage(2)">Yes 😍</button>
+
+    <button id="no-btn">
+        No 😜
+    </button>
+</div>
+
+<p id="msg" style="font-size:14px;color:#d63384;font-weight:bold;"></p>
+</div>
+
+<!-- PAGE 2 -->
+<div id="p2" class="page">
+<h1 style="color:var(--pink);">Happiest Birthday Mrs Balika Jii 🎀</h1>
+<img src="rafat.jpg" style="width:180px;height:180px;border-radius:50%;object-fit:cover;border:4px solid var(--pink);">
+<div style="font-size:50px;margin:20px 0;">💐💐💐</div>
+<button onclick="nextPage(3)">Cake Dekhna Hai? 🎂</button>
+</div>
+
+<!-- PAGE 3 -->
+<div id="p3" class="page">
+<img src="p3.jpg" style="width:180px;height:180px;border-radius:50%;object-fit:cover;border:4px solid var(--pink);">
+<h2 style="color:var(--pink);">RAFAT</h2>
+<p>(Zor se phook maaro ya click karo!)</p>
+<div style="font-size:70px;">🎂</div>
+<div class="candle">
+<div id="flame" class="flame" onclick="blowOut()"></div>
+</div>
+<button id="cake-next" style="display:none;" onclick="nextPage(4)">Surprise ➡️</button>
+</div>
+
+<!-- PAGE 4 -->
+<div id="p4" class="page">
+<img src="p4.jpg" style="width:180px;height:180px;border-radius:50%;object-fit:cover;border:4px solid var(--pink);">
+<h3 style="color:var(--pink);">Khas Aapke Liye... ✨</h3>
+<div style="font-style:italic;line-height:1.8;color:#444;">
+"Wo aankhein jaise gehri jheel ka manzar,<br>
+Wo zulfien jaise raaton ka nayaab amber.<br>
+Aapki muskurahat se khil uthti hai ye duniya,<br>
+Aur aapki mehek se mehka hai mera har safar!"<br><br>
+<strong style="color:#d63384;">"Rafat, aapki sadagi hi aapka naseeb hai,<br>
+Is Guru Jii ke dil ke aap sabse qareeb hain."</strong>
+</div>
+<button onclick="nextPage(5)">Ab Thoda Interview... ➡️</button>
+</div>
+
+<!-- PAGE 5 -->
+<div id="p5" class="page">
+<img src="p5.jpg" style="width:180px;height:180px;border-radius:50%;object-fit:cover;border:4px solid var(--pink);">
+<h3>Sawal No. 1 😂</h3>
+<p>Aapke paas kitne kilo dimaag hai? (Honest answer chahiye!)</p>
+<button onclick="alert('Error 404: Brain not found! 😜 ');">2 Gram</button>
+<button onclick="alert('Arre itna sach maat bolo! 😂'); nextPage(6)">Bilkul nahi hai</button>
+</div>
+
+<!-- PAGE 6 -->
+<div id="p6" class="page">
+<img src="p6.jpg" style="width:180px;height:180px;border-radius:50%;object-fit:cover;border:4px solid var(--pink);">
+<h3>Sawal No. 2 😤</h3>
+<p>Jab tumhe 100kg gussa ata h to sabse jyada dimaag ki dahi kiski hoti h?</p>
+<button onclick="alert('Bechara Guru Jii... 🥲'); nextPage(7)">Guru Jii ki</button>
+<button onclick="alert('Ye toh hona hi tha! 😂');">Ghar walon ki</button>
+</div>
+
+<!-- PAGE 7 -->
+<div id="p7" class="page">
+<img src="p7.jpg" style="width:180px;height:180px;border-radius:50%;object-fit:cover;border:4px solid var(--pink);">
+<h3>Sawal No. 3 😎</h3>
+<p>Is duniya ka sabse Smart, Handsome aur Pyara insaan kaun hai?</p>
+<button onclick="alert('Galat Jawab! ❌');">Shahrukh Khan</button>
+<button onclick="alert('Correct Answer! 1 Crore rupaye milte hain aapko! ❤️'); nextPage(8)">Mera Guru Jii 🙈</button>
+</div>
+
+<!-- PAGE 8 PREMIUM GIFT -->
+<div id="p8" class="page">
+
+  <div class="gift-container">
+
+    <h1 style="color:#ff2e63; font-weight:bold; margin-bottom:30px;">
+      A Special Gift For You Mrs Balika Jii... 🎀
+    </h1>
+
+    <div id="bigGift" style="font-size:120px; transition:1s; cursor:pointer;">
+      🎁
+    </div>
+
+    <button onclick="openPremiumGift()">
+      Gift Dekhna h? 🎁
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- PAGE 9 -->
+<div id="p9" class="page">
+<img src="p9.jpg" style="width:180px;height:180px;border-radius:50%;object-fit:cover;border:4px solid var(--pink);">
+<h2>A little effort for you 🙈💌</h2>
+<p id="typing"></p>
+<h3 style="color:var(--pink);border-top:1px dashed var(--pink);padding-top:15px;">
+Your Guru Jii 🎀
+</h3>
+<div style="font-size:50px;">🎁🌹💌</div>
+</div>
+
+<!-- COUNTDOWN OVERLAY -->
+<div id="countdownOverlay" style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+overflow:hidden;
+background:linear-gradient(135deg,#ff9eb5,#ffd1dc);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:15;
+">
+
+<div class="countdown-box">
+
+<div id="countNum" style="
+font-size:120px;
+color:white;
+font-weight:bold;
+">3</div>
+</div>
+</div>
+
+<!-- PREMIUM SLIDESHOW -->
+<div id="premiumSlideshow" style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+overflow:hidden;
+display:none;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#ffe6f0,#fff5f9);
+z-index:20;
+">
+
+<div style="
+width:320px;
+height:560px;
+background:rgba(255,255,255,0.7);
+backdrop-filter:blur(25px);
+border-radius:30px;
+padding:20px;
+z-index:5;
+position:relative;
+box-shadow:0 20px 60px rgba(0,0,0,0.3);
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:flex-start;
+">
+
+<h2 style="
+margin:10px 0 15px 0;
+color:#ff4d88;
+font-size:30px;
+font-weight:bold;
+">Memories... 💌💖</h2>
+
+<div style="
+width:100%;
+height:calc(100% - 70px);
+overflow:hidden;
+border-radius:25px;
+">
+
+<img id="premiumSlideImg"
+style="
+width:100%;
+height:100%;
+object-fit:cover;
+border-radius:25px;
+opacity:0;
+transition:opacity 0.8s ease, transform 0.8s ease;
+transform:scale(1.05);
+"
+src="photo1.jpg">
+
+</div>
+
+</div>
+</div>
+
+<script>
+
+/* Floating background */
+setInterval(()=>{
+const el=document.createElement("div");
+el.className="float";
+const items=["💖","🌸","🌺","🌹","💐","✨"];
+el.innerHTML=items[Math.floor(Math.random()*items.length)];
+el.style.left=Math.random()*100+"vw";
+el.style.animationDuration=(Math.random()*4+4)+"s";
+document.body.appendChild(el);
+setTimeout(()=>el.remove(),8000);
+},400);
+
+/* Password */
+function checkPass(){
+let pass=prompt("Enter Secret Code:");
+if(pass && pass.toLowerCase()=="rafat"){
+document.body.style.display="flex";
+alert("Welcome Mrs. Balika! ❤️");
+}else{
+alert("Galat jawab! ❌");
+window.location.reload();
+}
+}
+
+/* Navigation */
+function nextPage(num){
+document.getElementById("bg-music").play().catch(()=>{});
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById("p"+num).classList.add('active');
+if(num===3) startMic();
+if(num===9) startTyping();
+}
+
+/* Moving NO button */
+
+let noCount = 0;
+const noBtn = document.getElementById("no-btn");
+const container = document.getElementById("btn-container");
+
+function moveNo(e) {
+
+    noCount++;
+
+    if(noCount >= 10){
+        noBtn.style.display = "none";
+        document.getElementById("msg").innerText =
+        "Aakhir thak gayi na? Ab YES dabao! ❤️";
+        return;
+    }
+
+    noBtn.style.position = "absolute";
+
+    const maxX = container.clientWidth - noBtn.offsetWidth;
+    const maxY = container.clientHeight - noBtn.offsetHeight;
+
+    const randomX = Math.random() * maxX;
+    const randomY = Math.random() * maxY;
+
+    noBtn.style.left = randomX + "px";
+    noBtn.style.top  = randomY + "px";
+}
+
+/* 👇 Desktop hover */
+noBtn.addEventListener("mouseenter", moveNo);
+
+/* 👇 Mobile touch */
+noBtn.addEventListener("touchstart", function(e){
+    e.preventDefault();   // prevents double triggering
+    moveNo();
+});
+
+/* Typing */
+function startTyping(){
+let text="Haste raho humesha, Mrs. Balika!";
+let i=0;
+let target=document.getElementById("typing");
+target.innerHTML="";
+function type(){
+if(i<text.length){
+target.innerHTML+=text.charAt(i);
+i++;
+setTimeout(type,50);
+}
+}
+type();
+}
+
+/* Flower Rush */
+function blowOut(){
+document.getElementById('flame').classList.add('extinguished');
+document.getElementById('cake-next').style.display="inline-block";
+
+for(let i=0;i<400;i++){
+setTimeout(()=>createPetal(i%2===0?"left":"right"),i*3);
+}
+alert("Wish maang li na? Happy Birthday! ✨🎂");
+}
+
+function createPetal(side){
+const p=document.createElement("div");
+p.className="petal";
+const items=["🌹","🌸","🌺","🌻","🌼","💖","✨","💐"];
+p.innerHTML=items[Math.floor(Math.random()*items.length)];
+
+const xDist=Math.random()*400+50;
+const yDist=-(Math.random()*600+400);
+const xEnd=(Math.random()-0.5)*window.innerWidth;
+
+if(side==="left"){
+p.style.left="-30px";
+p.style.bottom="-30px";
+p.style.setProperty('--x',`${xDist}px`);
+}else{
+p.style.right="-30px";
+p.style.bottom="-30px";
+p.style.setProperty('--x',`-${xDist}px`);
+}
+
+p.style.setProperty('--y',`${yDist}px`);
+p.style.setProperty('--x-end',`${xEnd}px`);
+
+document.body.appendChild(p);
+setTimeout(()=>p.remove(),5000);
+}
+
+/* Mic */
+function startMic(){
+navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+const ctx=new (window.AudioContext||window.webkitAudioContext)();
+const analyser=ctx.createAnalyser();
+const mic=ctx.createMediaStreamSource(stream);
+mic.connect(analyser);
+analyser.fftSize=256;
+const data=new Uint8Array(analyser.frequencyBinCount);
+function check(){
+analyser.getByteFrequencyData(data);
+let sum=data.reduce((a,b)=>a+b,0);
+if(sum>7000) blowOut();
+else requestAnimationFrame(check);
+}
+check();
+}).catch(()=>{});
+}
+
+/* ===== PREMIUM GIFT SYSTEM ===== */
+
+function openPremiumGift(){
+let gift=document.getElementById("bigGift");
+gift.innerHTML="💖";
+gift.style.transform="scale(1.5) rotate(360deg)";
+
+setTimeout(()=>{
+startCountdownPremium();
+},1200);
+}
+
+/* ===== Premium-float for countdown and slideshow overlay (For p8) ===== */
+
+let premiumFloatingInterval;
+
+function startPremiumFloating(containerId){
+
+premiumFloatingInterval = setInterval(()=>{
+
+const el=document.createElement("div");
+el.className="premium-float";
+
+const items=["💖","🌸","🌺","🌹","💐","✨"];
+el.innerHTML=items[Math.floor(Math.random()*items.length)];
+
+el.style.left=Math.random()*100+"%";
+el.style.animationDuration=(Math.random()*4+4)+"s";
+
+document.getElementById(containerId).appendChild(el);
+
+setTimeout(()=>el.remove(),8000);
+
+},400);
+
+}
+
+function stopPremiumFloating(){
+clearInterval(premiumFloatingInterval);
+}
+
+function startCountdownPremium(){
+startPremiumFloating("countdownOverlay");
+let overlay=document.getElementById("countdownOverlay");
+let num=document.getElementById("countNum");
+
+overlay.style.display="flex";
+
+let count=3;
+
+let interval=setInterval(()=>{
+
+num.innerHTML=count;
+
+num.classList.remove("count-animate");
+void num.offsetWidth; // reset animation
+num.classList.add("count-animate");
+
+count--;
+
+if(count<0){
+clearInterval(interval);
+stopPremiumFloating();
+
+setTimeout(()=>{
+overlay.style.display="none";
+startPremiumSlideshow();
+},600);
+
+}
+
+},1000);
+}
+
+let premiumImages = [
+"rafat.jpg",
+"p3.jpg",
+"p4.jpg",
+"p5.jpg",
+"p6.jpg",
+"p7.jpg",
+"p8.jpg",
+"p9.jpg",
+"p10.jpg",
+"p11.jpg"
+];
+
+function startPremiumSlideshow(){
+
+startPremiumFloating("premiumSlideshow");
+
+let show=document.getElementById("premiumSlideshow");
+let img=document.getElementById("premiumSlideImg");
+
+show.style.display="flex";
+
+let index=0;
+
+function showImage(){
+img.style.opacity="0";
+img.style.transform="scale(1.05)";
+
+setTimeout(()=>{
+img.src=premiumImages[index];
+img.style.opacity="1";
+img.style.transform="scale(1)";
+},400);
+}
+
+showImage();
+
+let interval=setInterval(()=>{
+
+index++;
+
+if(index>=premiumImages.length){
+clearInterval(interval);
+stopPremiumFloating();
+
+setTimeout(()=>{
+show.style.display="none";
+nextPage(9);
+},600);
+
+return;
+}
+
+showImage();
+
+},3000);
+
+}
+
+</script>
+
+</body>
+</html>
+
